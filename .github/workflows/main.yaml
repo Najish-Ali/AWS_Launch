@@ -24,7 +24,6 @@ jobs:
 
     - name: Run tests
       run: |
-        # Run your tests here, e.g., using pytest
         pytest  # Adjust this command based on your testing framework
 
   deploy:
