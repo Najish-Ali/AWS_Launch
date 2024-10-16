@@ -72,9 +72,12 @@ jobs:
         run: python3 src/main.py
 
 ## AWS IAM Policies
+
 To ensure proper access, ensure that the IAM roles attached to your AWS user or service have the following permissions:
 
-S3: s3:ListBucket, s3:GetObject, s3:DeleteObject
-CloudWatch: logs:CreateLogGroup, logs:CreateLogStream, logs:PutLogEvents
-Logs and Monitoring
+- S3: s3:ListBucket, s3:GetObject, s3:DeleteObject
+- CloudWatch: logs:CreateLogGroup, logs:CreateLogStream, logs:PutLogEvents
+
+## Logs and Monitoring
+
 All actions performed by the script will be logged to AWS CloudWatch. Ensure that the necessary CloudWatch permissions are enabled.
