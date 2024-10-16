@@ -22,9 +22,15 @@ jobs:
       run: |
         pip install -r requirements.txt  # Make sure you have a requirements.txt file
 
+    - name: List contents of src directory
+      run: ls -la src  # This will show you the files in the src directory
     - name: Run main.py
       run: |
-        python3 /src/main.py # Adjust this command based on your testing framework
+         python3 src/main.py  # Remove the leading slash
+      shell: /usr/bin/bash -e {0}
+      env:
+       pythonLocation: /opt/hostedtoolcache/Python/3.12.3/x64
+       LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.3/x64/lib
 
   deploy:
     runs-on: ubuntu-latest
