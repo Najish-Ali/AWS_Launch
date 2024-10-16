@@ -18,28 +18,28 @@ CRONDA is a project designed to monitor and manage AWS S3 buckets by logging and
 
 ## Setup
 ### Clone the repository:
-
+```
 git clone https://github.com/your-repo/cronda.git
 cd cronda
-
+```
 ### Install dependencies:
 
-Ensure that you have Python and pip installed. Then, run the following command:
-
+   Ensure that you have Python and pip installed. Then, run the following command:
+```
 pip install -r requirements.txt
 The requirements.txt file includes dependencies such as watchtower for logging to CloudWatch.
-
+```
 ### Configure AWS CLI:
 
-Ensure that your AWS CLI is configured with the necessary credentials and permissions to access S3 and CloudWatch.
-
+   Ensure that your AWS CLI is configured with the necessary credentials and permissions to access S3 and CloudWatch.
+```
 aws configure
-
+```
 ### Run the main script:
-After configuring everything, you can run the main script directly to monitor S3 buckets and log actions to CloudWatch.
-
+   After configuring everything, you can run the main script directly to monitor S3 buckets and log actions to CloudWatch.
+```
 python3 src/main.py
-
+```
 This script will scan your AWS S3 buckets and perform the necessary cleanup while logging all events to CloudWatch.
 
 ### GitHub Actions Workflow
