@@ -22,9 +22,9 @@ jobs:
       run: |
         pip install -r requirements.txt  # Make sure you have a requirements.txt file
 
-    - name: Run tests
+    - name: Run main.py
       run: |
-        pytest tests/test_cronda.py # Adjust this command based on your testing framework
+        python3 main.py # Adjust this command based on your testing framework
 
   deploy:
     runs-on: ubuntu-latest
