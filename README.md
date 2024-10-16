@@ -50,7 +50,7 @@ This project is integrated with GitHub Actions to automate deployment and runnin
 Set up Python: The CI/CD pipeline installs Python 3.12 and required dependencies.Run the main script: It runs the main.py script in the src directory to ensure functionality in the deployment environment.
 
 - GitHub Actions example (main.yml):
-
+```
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -70,7 +70,7 @@ jobs:
 
       - name: Run main script
         run: python3 src/main.py
-
+```
 ## AWS IAM Policies
 
 To ensure proper access, ensure that the IAM roles attached to your AWS user or service have the following permissions:
