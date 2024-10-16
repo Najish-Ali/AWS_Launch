@@ -24,7 +24,7 @@ jobs:
 
     - name: Run tests
       run: |
-        pytest  # Adjust this command based on your testing framework
+        pytest tests/test_cronda.py # Adjust this command based on your testing framework
 
   deploy:
     runs-on: ubuntu-latest
