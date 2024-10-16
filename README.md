@@ -1,12 +1,13 @@
-#CRONDA
+# CRONDA
+
 CRONDA is a project designed to monitor and manage AWS S3 buckets by logging and cleaning up empty or extra resources using AWS CloudWatch for logging and monitoring. The project is automated using GitHub Actions for CI/CD pipeline setup.
 
-##Features
+## Features
 - Monitors S3 buckets for unused or extra resources.
 - Logs activities using AWS CloudWatch.
 -Automates the process of running scripts and cleaning up buckets.
 
-##Prerequisites
+## Prerequisites
  Ensure you have the following tools installed on your local environment:
 - Python 3.12+
 - AWS CLI (configured with access keys and appropriate permissions)
@@ -15,33 +16,33 @@ CRONDA is a project designed to monitor and manage AWS S3 buckets by logging and
 - CloudWatch logging permissions
 - IAM roles configured for S3 and CloudWatch
 
-##Setup
-###Clone the repository:
+## Setup
+### Clone the repository:
 
 git clone https://github.com/your-repo/cronda.git
 cd cronda
 
-###Install dependencies:
+### Install dependencies:
 
 Ensure that you have Python and pip installed. Then, run the following command:
 
 pip install -r requirements.txt
 The requirements.txt file includes dependencies such as watchtower for logging to CloudWatch.
 
-###Configure AWS CLI:
+### Configure AWS CLI:
 
 Ensure that your AWS CLI is configured with the necessary credentials and permissions to access S3 and CloudWatch.
 
 aws configure
 
-###Run the main script:
+### Run the main script:
 After configuring everything, you can run the main script directly to monitor S3 buckets and log actions to CloudWatch.
 
 python3 src/main.py
 
 This script will scan your AWS S3 buckets and perform the necessary cleanup while logging all events to CloudWatch.
 
-###GitHub Actions Workflow
+### GitHub Actions Workflow
 This project is integrated with GitHub Actions to automate deployment and running of the Python script.
 
 - Workflow steps:
@@ -70,7 +71,7 @@ jobs:
       - name: Run main script
         run: python3 src/main.py
 
-##AWS IAM Policies
+## AWS IAM Policies
 To ensure proper access, ensure that the IAM roles attached to your AWS user or service have the following permissions:
 
 S3: s3:ListBucket, s3:GetObject, s3:DeleteObject
