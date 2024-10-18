@@ -1,7 +1,12 @@
+import sys
+import os
 import boto3
 import json
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
-from src.list_buckets import list_s3_buckets  # Import the function
+
+sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
+
+from list_buckets import list_s3_buckets  
 
 def load_credentials():
     try:
