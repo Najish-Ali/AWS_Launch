@@ -20,18 +20,36 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install -r requirements.txt  # Make sure you have a requirements.txt file
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt  # Ensure you have a requirements.txt file for dependencies
 
     - name: List contents of src directory
-      run: ls -la src  # This will show you the files in the src directory
-    - name: Run main.py
+      run: ls -la src  # Verify the content of the src directory
+
+    - name: Run cronda.py
       run: |
-         python3 src/cronda.py  # Remove the leading slash
-     
+        python3 src/cronda.py  # Make sure the path is correct and there is no leading slash
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build  # Ensure the build job completes before testing
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.12.3'
+
+    - name: Run tests
+      run: |
+        python3 -m unittest discover -s tests  # Ensure you have unit tests in the 'tests' directory
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build  # Ensure the build job completes before deploying
+    needs: test  # Ensure both build and test jobs complete successfully before deploying
 
     steps:
     - name: Checkout code
@@ -43,10 +61,12 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_DEFAULT_REGION: 'us-east-1'  # Set your AWS region
       run: |
-        # Commands to deploy your application
-        # For example, if you're using AWS CLI to upload to S3:
-        aws s3 cp ./cronda s3://crondabuc2/ --recursive  # Adjust as needed
+        # Commands to deploy your application, e.g., copy files to an S3 bucket
+        aws s3 cp ./cronda s3://crondabuc2/ --recursive  # Replace with your S3 bucket and correct path
 
     - name: Notify deployment
       run: |
         echo "Deployment completed successfully!"
+        curl -X POST -H 'Content-type: application/json' --data '{"text":"Deployment successful!"}' ${{ secrets.SLACK_WEBHOOK_URL }}  # Optional: send a Slack notification if needed
+
+
