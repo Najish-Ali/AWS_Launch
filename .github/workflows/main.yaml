@@ -31,7 +31,7 @@ jobs:
         run: |
           echo "AWS credentials set"
 
-      - name: List S3 buckets
+      - name: Run CRONDA script
         run: |
           python3 src/cronda.py
         env:
@@ -42,4 +42,3 @@ jobs:
       - name: Check log file
         run: |
           cat deletion_log.txt
-
