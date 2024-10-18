@@ -1,17 +1,25 @@
+import json
 import os
 import boto3
 from botocore.exceptions import NoCredentialsError
 
 def load_credentials():
-    # Fetch AWS credentials and region from environment variables
-    aws_access_key_id = os.getenv('AWS_ACCESS_KEY_ID')
-    aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY')
-    aws_region = os.getenv('AWS_DEFAULT_REGION', 'us-east-1')  # Default to 'us-east-1' if not provided
-    
-    if not aws_access_key_id or not aws_secret_access_key:
-        raise RuntimeError("AWS credentials not set in environment variables")
+    # Load AWS credentials from secrets.json file
+    try:
+        with open('secrets.json', 'r') as f:
+            credentials = json.load(f)
+            aws_access_key_id = credentials.get('AWS_ACCESS_KEY_ID')
+            aws_secret_access_key = credentials.get('AWS_SECRET_ACCESS_KEY')
+            aws_region = credentials.get('AWS_DEFAULT_REGION', 'us-east-1')  # Default region if not set
 
-    return aws_access_key_id, aws_secret_access_key, aws_region
+            if not aws_access_key_id or not aws_secret_access_key:
+                raise RuntimeError("AWS credentials missing in secrets.json")
+
+            return aws_access_key_id, aws_secret_access_key, aws_region
+    except FileNotFoundError:
+        raise RuntimeError("The secrets.json file was not found.")
+    except json.JSONDecodeError:
+        raise RuntimeError("Error parsing secrets.json file.")
 
 def list_s3_buckets(s3_client):
     try:
@@ -39,3 +47,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
