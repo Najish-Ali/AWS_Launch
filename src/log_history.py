@@ -12,8 +12,7 @@ log_group_name = "CrondaLogs"  # Name of your CloudWatch log group
 log_stream_name = "LogHistoryStream"  # Name of your log stream
 
 # Create a CloudWatch log handler
-cw_handler = CloudWatchLogHandler(log_group=log_group_name, stream_name=log_stream_name)
-logger.addHandler(cw_handler)
+
 
 # Function to log historical data
 def log_data(data):
