@@ -9,7 +9,7 @@ def load_credentials():
     aws_region = os.getenv('AWS_DEFAULT_REGION', 'us-east-1')  # Default to 'us-east-1' if not provided
     
     if not aws_access_key_id or not aws_secret_access_key:
-        raise NoCredentialsError("AWS credentials not set in environment variables")
+        raise RuntimeError("AWS credentials not set in environment variables")
 
     return aws_access_key_id, aws_secret_access_key, aws_region
 
@@ -39,4 +39,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
