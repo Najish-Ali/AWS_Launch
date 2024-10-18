@@ -1,43 +1,29 @@
-import boto3
+from aws_credentials import load_aws_credentials
 from list_buckets import list_s3_buckets
 from delete_empty_buckets import delete_empty_buckets
-from log_history import log_deletion, log_data
-import os
+from log_history import log_data, log_deletion
 
-def load_aws_credentials():
-    """Load AWS credentials from environment variables."""
-    aws_access_key_id = os.getenv('AWS_ACCESS_KEY_ID')
-    aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY')
-    aws_region = os.getenv('AWS_DEFAULT_REGION')
-
-    if not aws_access_key_id or not aws_secret_access_key or not aws_region:
-        raise RuntimeError("AWS credentials not set in environment variables")
-
-    return aws_access_key_id, aws_secret_access_key, aws_region
-
-def filter_empty_buckets(s3_client, buckets):
-    """Filter out empty buckets."""
-    empty_buckets = []
-    for bucket in buckets:
-        objects = s3_client.list_objects_v2(Bucket=bucket)
-        if 'Contents' not in objects:
-            empty_buckets.append(bucket)
-    return empty_buckets
 def main():
-    # List S3 buckets
-    s3_client = boto3.client('s3')
-    buckets = list_s3_buckets(s3_client)
-    if buckets:
-        # Filter for empty buckets
-        empty_buckets = filter_empty_buckets(s3_client, buckets)
-        # If there are empty buckets, delete them
-        if empty_buckets:
-            delete_empty_buckets(empty_buckets)
-            for bucket in empty_buckets:
-                log_deletion(bucket)
-        else:
-            print("No empty buckets found.")
-    else:
-        print("No buckets available.")
+    aws_access_key_id, aws_secret_access_key, aws_region = load_aws_credentials()
+    
+    # Initialize S3 client
+    s3 = boto3.client(
+        's3',
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
+        region_name=aws_region
+    )
+
+    # List buckets
+    buckets = list_s3_buckets(s3)
+    empty_buckets = [bucket for bucket in buckets if check_if_empty(s3, bucket)]
+
+    # Log the deletion
+    for bucket in empty_buckets:
+        log_deletion(bucket)
+
+    # Delete empty buckets
+    delete_empty_buckets(empty_buckets)
+
 if __name__ == "__main__":
     main()
