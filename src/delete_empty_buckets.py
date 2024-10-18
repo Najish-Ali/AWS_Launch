@@ -1,6 +1,5 @@
 import boto3
 from aws_credentials import load_aws_credentials
-
 def delete_empty_buckets(empty_buckets):
     aws_access_key_id, aws_secret_access_key, aws_region = load_aws_credentials()
     s3_client = boto3.client(
