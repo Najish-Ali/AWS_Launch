@@ -1,3 +1,4 @@
+import boto3
 from aws_credentials import load_aws_credentials
 from list_buckets import list_s3_buckets
 from delete_empty_buckets import delete_empty_buckets
