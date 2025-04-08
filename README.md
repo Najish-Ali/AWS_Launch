@@ -1,83 +1,55 @@
-# CRONDA
+# EC2 Instance Launcher
 
-CRONDA is a project designed to monitor and manage AWS S3 buckets by logging and cleaning up empty or extra resources using AWS CloudWatch for logging and monitoring. The project is automated using GitHub Actions for CI/CD pipeline setup.
-
-## Features
-- Monitors S3 buckets for unused or extra resources.
-- Logs activities using AWS CloudWatch.
--Automates the process of running scripts and cleaning up buckets.
+This project automates the launching of EC2 instances on AWS using a Python script and GitHub Actions. The script is designed to be run as part of a GitHub Actions workflow, which allows you to configure and launch EC2 instances in a fully automated way.
 
 ## Prerequisites
- Ensure you have the following tools installed on your local environment:
-- Python 3.12+
-- AWS CLI (configured with access keys and appropriate permissions)
-- Git
-- An S3 bucket setup on AWS
-- CloudWatch logging permissions
-- IAM roles configured for S3 and CloudWatch
 
-## Setup
-### Clone the repository:
-```
-git clone https://github.com/your-repo/cronda.git
-cd cronda
-```
-### Install dependencies:
+Before using this project, ensure the following:
 
-   Ensure that you have Python and pip installed. Then, run the following command:
-```
-pip install -r requirements.txt
-The requirements.txt file includes dependencies such as watchtower for logging to CloudWatch.
-```
-### Configure AWS CLI:
+1. **AWS Account**: You need an AWS account with the necessary IAM permissions to launch EC2 instances.
+2. **GitHub Repository**: A GitHub repository where you can store your Python script and GitHub Actions workflow.
+3. **AWS Secrets**: The AWS credentials (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`) must be stored as GitHub Secrets in your repository.
 
-   Ensure that your AWS CLI is configured with the necessary credentials and permissions to access S3 and CloudWatch.
-```
-aws configure
-```
-### Run the main script:
-   After configuring everything, you can run the main script directly to monitor S3 buckets and log actions to CloudWatch.
-```
-python3 src/main.py
-```
-This script will scan your AWS S3 buckets and perform the necessary cleanup while logging all events to CloudWatch.
+## Setup Instructions
 
-### GitHub Actions Workflow
-This project is integrated with GitHub Actions to automate deployment and running of the Python script.
+### 1. Create AWS Secrets in GitHub
 
-- Workflow steps:
+Go to the **Settings** of your GitHub repository, then navigate to **Secrets** and add the following secrets:
 
-Set up Python: The CI/CD pipeline installs Python 3.12 and required dependencies.Run the main script: It runs the main.py script in the src directory to ensure functionality in the deployment environment.
+- `AWS_ACCESS_KEY_ID`: Your AWS access key ID.
+- `AWS_SECRET_ACCESS_KEY`: Your AWS secret access key.
+- `AWS_REGION`: The AWS region where the EC2 instances should be launched.
+- `AMI_ID`: The ID of the custom AMI you wish to use for the EC2 instances.
+- `NUM_INSTANCES`: The number of EC2 instances to launch (e.g., 1).
+- `KEY_NAME`: The name of the SSH key pair to associate with the EC2 instances.
+- `SECURITY_GROUP`: The security group ID(s) to associate with the EC2 instances.
 
-- GitHub Actions example (main.yml):
-```
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+### 2. Python Script Setup
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.12
+The Python script to launch EC2 instances is located in the `src` folder.
 
-      - name: Install dependencies
-        run: |
-          python3 -m pip install --upgrade pip
-          pip install -r requirements.txt
+Make sure the script `launch_ec2_instances.py` exists inside the `src` folder. Here’s a brief description of the Python script:
 
-      - name: Run main script
-        run: python3 src/main.py
-```
-## AWS IAM Policies
+- The script uses the `boto3` library to interact with the AWS EC2 service.
+- The script will launch EC2 instances based on the environment variables set in the GitHub Actions pipeline.
+  
+### 3. GitHub Actions Workflow
 
-To ensure proper access, ensure that the IAM roles attached to your AWS user or service have the following permissions:
+The workflow configuration file is located in the `.github/workflows` directory.
 
-- S3: s3:ListBucket, s3:GetObject, s3:DeleteObject
-- CloudWatch: logs:CreateLogGroup, logs:CreateLogStream, logs:PutLogEvents
+Here's how the pipeline works:
+- **Trigger**: The workflow can be triggered manually using the GitHub Actions **workflow_dispatch** event.
+- **Steps**:
+  - **Checkout Repository**: The repository is checked out so the workflow can access the code.
+  - **Set Up Python**: The workflow sets up Python 3.8.
+  - **Configure AWS**: The AWS CLI is configured with the credentials stored in GitHub Secrets.
+  - **Install Dependencies**: The `boto3` library is installed for interacting with AWS services.
+  - **Run the Launch EC2 Instances Script**: The script located in the `src` folder is run to launch EC2 instances.
 
-## Logs and Monitoring
+### 4. Run the Workflow
 
-All actions performed by the script will be logged to AWS CloudWatch. Ensure that the necessary CloudWatch permissions are enabled.
+To trigger the workflow and launch EC2 instances:
+1. Go to the **Actions** tab in your GitHub repository.
+2. Select the **Launch EC2 Instances** workflow.
+3. Click the **Run workflow** button.
+4. This will manually trigger the workflow, and EC2 instances will be launched based on the configuration set in your GitHub Secrets.
