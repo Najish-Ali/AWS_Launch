@@ -46,5 +46,6 @@ jobs:
         KEY_NAME: ${{ secrets.KEY_NAME }}
         SECURITY_GROUP: ${{ secrets.SECURITY_GROUP }}
       run: |
-        # Run the Python script to launch EC2 instances
+        # Change Directory Run the Python script to launch EC2 instances
+        cd src
         python launch_ec2_instances.py
