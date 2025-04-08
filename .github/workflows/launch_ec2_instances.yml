@@ -1,0 +1,50 @@
+name: Launch EC2 Instances
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  launch-ec2-instances:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: Install AWS CLI
+      run: |
+        # Install AWS CLI v2
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install
+        aws --version
+
+    - name: AWS Configure
+      run: |
+        # Configure AWS CLI using environment variables
+        aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws configure set region ${{ secrets.AWS_REGION }}
+
+    - name: Install Python Dependencies
+      run: |
+        # Install required Python packages
+        python -m pip install --upgrade pip
+        pip install boto3
+
+    - name: Run the Launch EC2 Instances Script
+      env:
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+        AMI_ID: ${{ secrets.AMI_ID }}
+        NUM_INSTANCES: ${{ secrets.NUM_INSTANCES }}
+        INSTANCE_TYPE: "t2.micro"
+        KEY_NAME: ${{ secrets.KEY_NAME }}
+        SECURITY_GROUP: ${{ secrets.SECURITY_GROUP }}
+      run: |
+        # Run the Python script to launch EC2 instances
+        python launch_ec2_instances.py
