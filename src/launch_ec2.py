@@ -19,9 +19,12 @@ if __name__ == "__main__":
     region = os.getenv('AWS_REGION', 'us-west-2')
     num_instances = int(os.getenv('NUM_INSTANCES', 1))
     ami_id = os.getenv('AMI_ID', '')
-    instance_type = os.getenv('INSTANCE_TYPE', 't2.micro')
-    key_name = os.getenv('KEY_NAME', 'my-key-pair')
-    security_group_ids = os.getenv('SECURITY_GROUP_IDS', 'sg-12345678').split(',')
+    instance_type = 't2.micro'  # Set this manually
+    key_name = 'test'    # Set this manually
+    security_group_ids = ['sg-0cd5a1a0c2a934f7d']
+    # instance_type = os.getenv('INSTANCE_TYPE', 't2.micro')
+    # key_name = os.getenv('KEY_NAME', 'my-key-pair')
+    # security_group_ids = os.getenv('SECURITY_GROUP_IDS', 'sg-12345678').split(',')
 
     if not ami_id:
         print("AMI ID must be provided!")
