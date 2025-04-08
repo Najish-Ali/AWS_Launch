@@ -45,4 +45,5 @@ jobs:
         TRAFFIC_THRESHOLD: ${{ secrets.TRAFFIC_THRESHOLD }}
       run: |
         # Run the Python script to terminate EC2 instances based on traffic
-        python terminate_ec2_instances.py
+        cd src
+        python check_and_terminate.py
