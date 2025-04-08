@@ -1,0 +1,48 @@
+name: Terminate EC2 Instances Based on Traffic
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  terminate-ec2-instances:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: Install AWS CLI
+      run: |
+        # Install AWS CLI v2
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install
+        aws --version
+
+    - name: AWS Configure
+      run: |
+        # Configure AWS CLI using environment variables
+        aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws configure set region ${{ secrets.AWS_REGION }}
+
+    - name: Install Python Dependencies
+      run: |
+        # Install required Python packages
+        python -m pip install --upgrade pip
+        pip install boto3 requests
+
+    - name: Run the Terminate EC2 Instances Script
+      env:
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+        AMI_ID: ${{ secrets.AMI_ID }}
+        CPU_THRESHOLD: ${{ secrets.CPU_THRESHOLD }}
+        TRAFFIC_THRESHOLD: ${{ secrets.TRAFFIC_THRESHOLD }}
+      run: |
+        # Run the Python script to terminate EC2 instances based on traffic
+        python terminate_ec2_instances.py
