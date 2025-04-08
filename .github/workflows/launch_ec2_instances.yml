@@ -48,4 +48,4 @@ jobs:
       run: |
         # Change Directory Run the Python script to launch EC2 instances
         cd src
-        python launch_ec2_instances.py
+        python launch_ec2.py
